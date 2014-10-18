@@ -27,13 +27,15 @@ h2 {
 	height: 15%;
 }
 
+
 .lv2-block {
 	text-align: center;
 }
 
 
-li {
-	text-decoration: none;
+ul li {
+	list-style-type: none;
+	display: inline;
 }
 
 img {

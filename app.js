@@ -81,6 +81,25 @@ function isInSession(req) {
 	return req.session.hasOwnProperty('logged') && req.session.logged === true;
 }
 
+/*
+	renders the standard server response
+*/
+function renderResponse(status, err, req, res) {
+	if (status === 1) {
+		var result = {
+			status: 1,
+			uid: req.session.uid
+		};
+	} else {
+		var result = {
+			status: 0,
+			message: err
+		};
+	}
+	res.writeHead(200, {'Content-Type': 'application/json'});
+	res.end(JSON.stringify(result));
+}
+
 app.use(session({
 	resave: true,
 	saveUninitialized: true,
@@ -91,7 +110,7 @@ app.use(session({
 // handle get requests
 app.get('/auth/', function(req, res) {
 	if (isInSession(req)) {
-		res.end('already have a session');
+		renderResponse(0, 'Session already active', req, res);
 	} else {
 		if (req.query.hasOwnProperty('fid') && req.query.hasOwnProperty('accToken')) {
 			// client wants to authenticate thru facebook
@@ -100,10 +119,10 @@ app.get('/auth/', function(req, res) {
 					req.session.logged = true;
 					req.session.uid = req.query.fid;
 					req.session.prev = null;
-					res.end('yeah baby');
+					renderResponse(1, '', req, res);
 				} else {
 					req.session.logged = false;
-					res.end('auth failed');
+					renderResponse(0, 'Authentication Failed', req, res);
 				}
 			});
 		}
@@ -112,22 +131,67 @@ app.get('/auth/', function(req, res) {
 
 app.get('/update/', function(req, res) {
 	if (isInSession(req)) {
-		if (req.query.hasOwnProperty('name') && req.query.hasOwnProperty('type') && req.query.hasOwnProperty('volume')) {
-			updateDrinkCount({name: req.query.name, type: req.query.type, volume: req.query.volume}, req.session, function(filter) {
-				db.collection('user_drink').update(filter, {$inc: {'quantity': 1}, $push: {timestamp: new Date()}},
-				function(err, data) {
-					if (err === null && data.length === 1) {
-						res.end('ok we made the update');
-					} else {
-						res.end('database error - item not updated');
-					}
-				});
+		if (req.query.hasOwnProperty('name') 
+		&& req.query.hasOwnProperty('type')
+		&& req.query.hasOwnProperty('volume')) {
+			// we have a well formed query, find the drink_id
+			db.collection('drink').find({'name': req.query.name, 'type': req.query.type, 
+			'volume': parseInt(req.query.volume)}, function(err, data){
+				if (err === null && data.length === 1) {
+					// found an entry, extract the ObjectId and update the user_drink
+					var drinkId = data[0]._id;
+					db.collection('user_drink').update({'drink_id': drinkId, 'user_id': req.session.uid},
+						{$inc: {'quantity': 1}, $push: {timestamp: new Date()}}, {upsert: true});
+					req.prev = drinkId;
+					renderResponse(1, '', req, res);
+				} else {
+					renderResponse(0, 'Update Failed', req, res);
+				}
 			});
 		} else {
-			res.end('malformed data');
+			renderResponse(0, 'Malformed Data', req, res);
 		}
 	} else {
-		res.end('session error')
+		renderResponse(0, 'User not authenticated', req, res);
+	}
+});
+
+function retriever(curr, max, data, result, callback) {
+	if (curr === max) {
+		callback(result);
+		return;
+	}
+	db.collection('drink').find({_id: data[curr].drink_id}, function(err, info) {
+		if (err === null && info.length > 0) {
+			result.push(
+				{
+					name: info[0].name,
+					type: info[0].type,
+					volume: info[0].volume,
+					quantity: data[curr].quantity,
+					times: data[curr].timestamp
+			});
+		}
+		retriever(curr + 1, max, data, result, callback);
+	});
+}
+
+app.get('/retrieve/', function(req, res) {
+	if (isInSession(req)) {
+		db.collection('user_drink').find({user_id: req.session.uid}, function(err, data) {
+			if (err === null && data.length > 0) {
+				// found
+				var result = [];
+				retriever(0, data.length, data, result, function(toSend) {
+					res.writeHead(200, {'Content-Type': 'application/json'});
+					res.end(JSON.stringify(toSend));
+				});
+			} else {
+				renderResponse(0, 'No data found', req, res);
+			}
+		});
+	} else {
+		renderResponse(0, 'User not authenticated', req, res);
 	}
 });
 

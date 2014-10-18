@@ -1,0 +1,25 @@
+body {
+	font-family: "Roboto", "sans-serif";
+	width: 85%;
+	margin-left: auto;
+	margin-right: auto;
+	border: solid #03A9F4 1px;
+}
+
+
+/* app leading header */
+h1 {
+	text-align: center;
+	font-weight: 400;
+}
+
+
+
+/* top banner */
+.lv1-block {
+	height: 15%;
+}
+
+
+
+

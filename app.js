@@ -15,23 +15,20 @@ var FB = new facebook.Facebook({
 	xfbml		: 	true,
 	version		: 	'v2.1'
 });
+var db = mongo('drinker:ilikesodaenergy@146.148.61.59/drinkdb');
 
 /*
 	invoke this function to update a drink tally
+	if successful, it will also add a 'prev' field
+	to the session that indicates that most recent action performed
 */
-function updateDrinkCount() {
+function updateDrinkCount(drinkId, session) {
 	return 0;
 }
 
 /*
-	defines and establishes a new user
-*/
-function createUser() {
-	return 0;
-}
-
-/*
-	verifies the authenticity of user by checking fb login
+	verifies the authenticity of user by checking fb login and then
+	creating a new entry in the users collection only if necessary
 */
 function fbAuth(fid, accessToken, callback) {
 	// make api call with access token and userID
@@ -39,16 +36,22 @@ function fbAuth(fid, accessToken, callback) {
 		if (!response || response.error) {
 			callback(false);
 		} else {
-			callback(true);
+			db.collection('user').find({'fb_id': fid}, function(err, data) {
+				if (err !== null) {
+					callback(false);
+				} else if (data.length < 1) {
+					db.collection('user').insert({
+						'fb_id': fid,
+						'gender': response.gender,
+						'timezone': response.timezone
+					});
+					callback(true);
+				} else {
+					callback(true);
+				}
+			});
 		}
 	});
-}
-
-/*
-	checks if the user is currently in our database
-*/
-function userExists() {
-	return 0;
 }
 
 /*
@@ -91,6 +94,7 @@ app.get('/auth/', function(req, res) {
 				if (status) {
 					req.session.logged = true;
 					req.session.uid = req.query.fid;
+					req.session.prev = null;
 					res.end('yeah baby');
 				} else {
 					req.session.logged = false;
@@ -103,8 +107,12 @@ app.get('/auth/', function(req, res) {
 
 app.get('/update/', function(req, res) {
 	if (isInSession(req)) {
-		if (req.query.hasOwnProperty('did') && req.query.hasOwnProperty('action')) {
-			res.end('ok we made the update');
+		if (req.query.hasOwnProperty('did')) {
+			if (updateDrinkCount(req.query.did, req.session)) {
+				res.end('ok we made the update');
+			} else {
+				res.end('database error - item not updated');
+			}
 		} else {
 			res.end('malformed data');
 		}

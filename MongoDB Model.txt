@@ -1,0 +1,68 @@
+MongoDB Model
+
+user =
+{
+	"_id": auto-generated
+	"fb_id": "823924450980733",		// from fb | int
+  	"gender": "male",		// from fb | string 
+  	"timezone": -7		// let user set?
+ }
+
+drink =
+{
+	"_id": auto-generated,
+	"name": "cocacola",
+	"type": "soda",
+	"volume": 12		// in OZ
+}
+
+user_drink =
+{
+	"_id": auto-generated,
+	"user_id": user-auto-generated,
+	"drink_id": drink-auto-generated,
+	"timestamp": [datetime]		// we can calculate quantity
+	"quantity": 3		// added for each timestamp
+}
+
+e = {"user_id": ObjectId("544240b84d4871c27e23093b"), "drink_id": ObjectId("544242434d4871c27e23093d"), "timestamp":}
+
+**SAMPLE CODE**
+
+// to override _id
+db.yourcollection.insert({_id:"myuniquevalueN",a:1,b:1})
+
+// find with AND operator
+db.inventory.find( { $and: [ { price: { $ne: 1.99 } }, { price: { $exists: true } } ] } )
+
+// append/push to array
+db.students.update(
+   { _id: 1 },
+   { $push: { scores: 89 } }
+)
+
+// the $inc operator to increment the stock field; and
+// the $set operator to replace the value of the item field, the // publisher field in the info embedded document, the tags field, // and the second element in the ratings array.
+db.books.update(
+   { _id: 1 },
+   {
+     $inc: { stock: 5 },
+     $set: {
+       item: "ABC123",
+       "info.publisher": "2222",
+       tags: [ "software" ],
+       "ratings.1": { by: "xyz", rating: 3 }
+     }
+   }
+)
+
+**DISCUSSION**
+- When we serve a statistic to a user, we only need to show their data. If showing comparison data, we only need to show averages. Thus, the only data required is:
+	> fb_id
+	> gender
+	> timestamp [array] // to calculate quantity
+		> drink name
+		> drink type
+		> drink volume
+	> averages // calculate from user_drink 
+

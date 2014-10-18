@@ -22,8 +22,13 @@ var db = mongo('drinker:ilikesodaenergy@146.148.61.59/drinkdb');
 	if successful, it will also add a 'prev' field
 	to the session that indicates that most recent action performed
 */
-function updateDrinkCount(drinkId, session) {
-	return 0;
+function updateDrinkCount(filter, session, callback) {
+	db.collection('drink').find(filter, function(err, data) {
+		if (err === null && data.length === 1) {
+			db.collection('user_drink').find({'drink_id': data._id, 'fb_id': session.uid},
+				callback({'drink_id': data._id, 'fb_id': session.uid}));
+		}
+	});
 }
 
 /*
@@ -107,17 +112,22 @@ app.get('/auth/', function(req, res) {
 
 app.get('/update/', function(req, res) {
 	if (isInSession(req)) {
-		if (req.query.hasOwnProperty('did')) {
-			if (updateDrinkCount(req.query.did, req.session)) {
-				res.end('ok we made the update');
-			} else {
-				res.end('database error - item not updated');
-			}
+		if (req.query.hasOwnProperty('name') && req.query.hasOwnProperty('type') && req.query.hasOwnProperty('volume')) {
+			updateDrinkCount({name: req.query.name, type: req.query.type, volume: req.query.volume}, req.session, function(filter) {
+				db.collection('user_drink').update(filter, {$inc: {'quantity': 1}, $push: {timestamp: new Date()}},
+				function(err, data) {
+					if (err === null && data.length === 1) {
+						res.end('ok we made the update');
+					} else {
+						res.end('database error - item not updated');
+					}
+				});
+			});
 		} else {
 			res.end('malformed data');
 		}
 	} else {
-		res.end('session error');
+		res.end('session error')
 	}
 });
 

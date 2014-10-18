@@ -7,6 +7,7 @@
 	<script src="http://code.highcharts.com/highcharts.js"></script>
 	<script src="http://code.highcharts.com/modules/data.js"></script>
 	<script src="http://code.highcharts.com/modules/drilldown.js"></script>
+    <script type="text/javascript" src="js/angular.js"></script>
 </head>
 
 <body>
@@ -132,6 +133,13 @@ $(function () {
                 });
             });
 
+
+            Highcharts.setOptions({
+                    lang: {
+                        drillUpText: 'To Drink Type'
+                    }
+                });
+
             // Create the chart
             $('#container').highcharts({
                 chart: {
@@ -176,7 +184,24 @@ $(function () {
                 }],
                 drilldown: {
                     series: drilldownSeries
+                },
+                
+                theme: {
+                    fill: 'white',
+                    'stroke-width': 1,
+                    stroke: 'silver',
+                    r: 0,
+                    states: {
+                        hover: {
+                            fill: '#EEEEEE'
+                        },
+                        select: {
+                            stroke: '#039',
+                            fill: '#bada55'
+                        }
+                    }
                 }
+                
             });
         }
     });
@@ -184,8 +209,18 @@ $(function () {
 </script>
 
 
+<style type="text/css">
+#statTable {
+    margin: auto;
+}
 
-<table style="width: 100%;">
+#statTable tr {
+    text-align: center;
+}
+</style>
+
+
+<!-- <table id="statTable">
    
     <tr>
         <th>Soda</th>
@@ -201,11 +236,27 @@ $(function () {
 
 
 
+</table> -->
+
+
+
+<div ng-app="" ng-controller="customersController"> 
+
+<table>
+  <tr ng-repeat="x in names">
+    <td>{{ x.Name }}</td>
+    <td>{{ x.Country }}</td>
+  </tr>
 </table>
 
+</div>
 
-
-
+<script>
+function customersController($scope,$http) {
+  $http.get("http://www.w3schools.com/website/Customers_JSON.php")
+  .success(function(response) {$scope.names = response;});
+}
+</script>
 
 
 

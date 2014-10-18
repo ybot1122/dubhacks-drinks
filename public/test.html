@@ -1,0 +1,60 @@
+<html>
+	<head>
+		<title>Test</title>
+		<link href="style.css" rel="stylesheet" />
+	</head>
+	<body>
+		<script>
+		  window.fbAsyncInit = function() {
+		    FB.init({
+		      appId      : '1481238075482245',
+		      xfbml      : true,
+		      version    : 'v2.1'
+		    });
+		  };
+
+		  (function(d, s, id){
+		     var js, fjs = d.getElementsByTagName(s)[0];
+		     if (d.getElementById(id)) {return;}
+		     js = d.createElement(s); js.id = id;
+		     js.src = "//connect.facebook.net/en_US/sdk.js";
+		     fjs.parentNode.insertBefore(js, fjs);
+		   }(document, 'script', 'facebook-jssdk'));
+
+			function loadXMLDoc(fid, accToken) {
+				var xmlhttp;
+				if (window.XMLHttpRequest)
+				  {// code for IE7+, Firefox, Chrome, Opera, Safari
+				  xmlhttp=new XMLHttpRequest();
+				  }
+				else
+				  {// code for IE6, IE5
+				  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				  }
+				xmlhttp.onreadystatechange=function()
+				  {
+				  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+				    {
+				    document.getElementById("status").innerHTML=xmlhttp.responseText;
+				    }
+				  }
+				xmlhttp.open("GET","http://localhost:3000/auth/?fid=" + fid + "&accToken=" + accToken,true);
+				xmlhttp.send();
+			}
+
+			function auth() {
+				FB.getLoginStatus(function(res) {
+					if (res.status !== 'connected') {
+						FB.login();
+					} else {
+						console.log(res);
+						loadXMLDoc(res.authResponse.userID, res.authResponse.accessToken);
+					}
+				});
+			};
+		</script>
+		<h1>Hello</h1>
+		<p id="fb-auth" onclick="auth()">Login to FB!</p>
+		<p id="status"></p>
+	</body>
+</html>

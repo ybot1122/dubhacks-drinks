@@ -4,13 +4,10 @@
   "description": "ERROR: No README data found!",
   "main": "app.js",
   "dependencies": {
-    "finalhandler": "~0.1.0",
-    "http": "~0.0.0",
+    "express": "~4.9.8",
     "mongojs": "~0.14.1",
-    "querystring": "~0.2.0",
-    "serve-static": "~1.5.3",
-    "url": "~0.10.1",
-    "facebook-sdk": "*"
+    "facebook-sdk": "*",
+    "express-session": "*"
   },
   "devDependencies": {},
   "scripts": {

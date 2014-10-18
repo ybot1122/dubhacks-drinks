@@ -1,0 +1,7 @@
+body {
+	background: gray;
+}
+
+#fb-auth:hover {
+	cursor: pointer;
+}

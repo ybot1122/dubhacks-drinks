@@ -1,0 +1,28 @@
+-- The Facebook Login Auth Flow --
+1) User logs into Facebook
+2) User grants permission to connect to our app. User ID and short-lived
+	access token retrieved
+3) Server verifies that the the access token is indeed associated to the
+	provided User ID.
+4) Session variable sets field 'logged' to true and also sets field 'uid' to
+	the user's Facebook ID.
+
+-- Making Requests to our Server --
+
+Making a GET request to /auth/ expects the following data: 	
+	{
+		fid:		"facebook ID",
+		accToken: 	"facebook access token"
+	}
+
+Making a GET request to /update/ will return an error if the user's session
+is invalid. Otherwise, it expects the following data:
+	{
+		did: 		"drink ID",
+		action: 	"incr"/"decr"
+	}
+
+-- Stats Filtering and Selecting --
+{
+	TBD
+}

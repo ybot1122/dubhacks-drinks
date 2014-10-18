@@ -7,8 +7,16 @@
 4) Session variable sets field 'logged' to true and also sets field 'uid' to
 	the user's Facebook ID.
 
--- Making Requests to our Server --
+-- Session Variable --
+Once the client is authenticated with Facebook and verified in our database,
+their session variable gains certain fields.
+	{
+		logged: 	true/false,
+		uid: 		"user ID",
+		prev: 		"drink ID"
+	}
 
+-- Making Requests to our Server --
 Making a GET request to /auth/ expects the following data: 	
 	{
 		fid:		"facebook ID",
@@ -18,11 +26,21 @@ Making a GET request to /auth/ expects the following data:
 Making a GET request to /update/ will return an error if the user's session
 is invalid. Otherwise, it expects the following data:
 	{
-		did: 		"drink ID",
-		action: 	"incr"/"decr"
+		name: 		"drink name",
+		type: 		"drink type",
+		volume: 	"drink volume"
 	}
 
--- Stats Filtering and Selecting --
-{
-	TBD
-}
+-- Server Responses --
+Every single GET request will receive one of the following responses:
+On success:
+	{
+		status: 	"1",
+		uid: 		"user ID"
+	}
+
+On failure:
+	{
+		status: 	"0",
+		message: 	"error message"
+	}

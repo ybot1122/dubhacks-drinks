@@ -47,7 +47,6 @@
 					if (res.status !== 'connected') {
 						FB.login();
 					} else {
-						console.log(res);
 						loadXMLDoc(res.authResponse.userID, res.authResponse.accessToken);
 					}
 				});

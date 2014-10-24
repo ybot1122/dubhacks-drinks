@@ -1,0 +1,65 @@
+body, h1, h2, h3 ,h4, p {
+	font-family: "Roboto", "sans-serif";
+}
+
+body {
+	width: 85%;
+	margin-left: auto;
+	margin-right: auto;
+	border: solid #03A9F4 1px;
+}
+
+
+/* app leading header */
+h1 {
+	text-align: center;
+	font-weight: 500;
+}
+
+h2 {
+	text-align: center;
+	font-weight: 400;
+}
+
+
+/* top banner */
+.lv1-block {
+	height: 15%;
+}
+
+.lv2-block {
+	text-align: center;
+}
+
+
+li {
+	text-decoration: none;
+}
+
+img {
+	text-align: center;
+}
+
+#centerbody {
+	text-align: center;
+}
+
+#fb-log {
+	cursor: pointer;
+}
+
+#fb-log:hover {
+	color: blue;
+}
+
+#centerbody img {
+	cursor: pointer;
+}
+
+#back:hover {
+	color: blue;
+}
+
+#back {
+	cursor: pointer;
+}

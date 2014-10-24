@@ -1,0 +1,251 @@
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/custom.css">
+	
+	<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/modules/data.js"></script>
+	<script src="http://code.highcharts.com/modules/drilldown.js"></script>
+    <script type="text/javascript" src="js/angular.js"></script>
+</head>
+
+<body>
+
+
+<h1>
+	DubDrink
+</h1>
+<div class="lv1-block" id="container" style="min-width: auto; height: 500px; margin: 0 auto"></div>
+
+
+<!-- data  -->
+<pre id="tsv" style="display:none">Browser Version	Total Market Share
+Soda 8.0	26.61%
+Soda 9.0	16.96%
+Juice 18.0	8.01%
+Juice 19.0	7.73%
+Energy Drink 12	6.72%
+Soda 6.0	6.40%
+Energy Drink 11	4.72%
+Soda 7.0	3.55%
+Energy Drink 13	2.16%
+Energy Drink 3.6	1.87%
+
+Juice 17.0	1.13%
+Energy Drink 10	0.90%
+
+Energy Drink 9.0	0.65%
+Energy Drink 8.0	0.55%
+Energy Drink 4.0	0.50%
+Juice 16.0	0.45%
+Energy Drink 3.0	0.36%
+Energy Drink 3.5	0.36%
+Energy Drink 6.0	0.32%
+Energy Drink 5.0	0.31%
+Energy Drink 7.0	0.29%
+
+Juice 18.0 - Maxthon Edition	0.26%
+Juice 14.0	0.25%
+Juice 20.0	0.24%
+Juice 15.0	0.18%
+Juice 12.0	0.16%
+
+
+Juice 13.0	0.13%
+
+Juice 11.0	0.10%
+Energy Drink 14	0.10%
+Energy Drink 2.0	0.09%
+Juice 10.0	0.09%
+
+Soda 8.0 - Tencent Traveler Edition	0.09%</pre>
+<!-- end data  -->
+
+<script type="text/javascript">
+var request = $.ajax({
+        url: '/retrieve/',
+        type: 'GET',
+        datatype: 'JSON'
+    });
+    request.done(function(res) {
+        console.log(res);    
+        }
+    );
+    
+</script>
+
+
+
+<script type="text/javascript">
+
+
+
+$(function () {
+
+    Highcharts.data({
+        csv: document.getElementById('tsv').innerHTML,
+        itemDelimiter: '\t',
+        parsed: function (columns) {
+
+            var brands = {},
+                brandsData = [],
+                versions = {},
+                drilldownSeries = [];
+
+            // Parse percentage strings
+            columns[1] = $.map(columns[1], function (value) {
+                if (value.indexOf('%') === value.length - 1) {
+                    value = parseFloat(value);
+                }
+                return value;
+            });
+
+            $.each(columns[0], function (i, name) {
+                var brand,
+                    version;
+
+                if (i > 0) {
+
+                    // Remove special edition notes
+                    name = name.split(' -')[0];
+
+                    // Split into brand and version
+                    version = name.match(/([0-9]+[\.0-9x]*)/);
+                    if (version) {
+                        version = version[0];
+                    }
+                    brand = name.replace(version, '');
+
+                    // Create the main data
+                    if (!brands[brand]) {
+                        brands[brand] = columns[1][i];
+                    } else {
+                        brands[brand] += columns[1][i];
+                    }
+
+                    // Create the version data
+                    if (version !== null) {
+                        if (!versions[brand]) {
+                            versions[brand] = [];
+                        }
+                        versions[brand].push(['v' + version, columns[1][i]]);
+                    }
+                }
+
+            });
+
+            $.each(brands, function (name, y) {
+                brandsData.push({
+                    name: name,
+                    y: y,
+                    drilldown: versions[name] ? name : null
+                });
+            });
+            $.each(versions, function (key, value) {
+                drilldownSeries.push({
+                    name: key,
+                    id: key,
+                    data: value
+                });
+            });
+
+
+            Highcharts.setOptions({
+                    lang: {
+                        drillUpText: 'To Drink Type'
+                    }
+                });
+
+            // Create the chart
+            $('#container').highcharts({
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Beverage Consumption Overtime'
+                },
+                subtitle: {
+                    text: 'Click the columns to view brands.'
+                },
+                xAxis: {
+                    type: 'category'
+                },
+                yAxis: {
+                    title: {
+                        text: 'Total Consumption'
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                plotOptions: {
+                    series: {
+                        borderWidth: 0,
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.y:.1f}'
+                        }
+                    }
+                },
+
+                tooltip: {
+                    headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                    pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}</b><br/>'
+                },
+
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: brandsData
+                }],
+                drilldown: {
+                    series: drilldownSeries
+                },
+                
+                theme: {
+                    fill: 'white',
+                    'stroke-width': 1,
+                    stroke: 'silver',
+                    r: 0,
+                    states: {
+                        hover: {
+                            fill: '#EEEEEE'
+                        },
+                        select: {
+                            stroke: '#039',
+                            fill: '#bada55'
+                        }
+                    }
+                }
+                
+            });
+        }
+    });
+});
+</script>
+
+
+<style type="text/css">
+#statTable {
+    margin: auto;
+}
+
+#statTable tr {
+    text-align: center;
+}
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

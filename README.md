@@ -1,6 +1,5 @@
 dubhacks-drinks
 ===============
-Live Demo: http://be-the-people-env-dv2a7cxjtg.elasticbeanstalk.com/
+Live Demo: http://dubdrinks-env.elasticbeanstalk.com/
 
-
-I made this video to demo the admin panel: https://drive.google.com/file/d/0BzyAsZMYI1y7VDNIcUMxRmplYlE/view?usp=sharing
+Proof-Of-Concept. Users can track soda consumption and produce aggregate statistics. To be ported as a mobile app. Data display is not connected to back-end yet, use the javascript console to observe the data being recorded and stored. 

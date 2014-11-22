@@ -1,31 +1,39 @@
 MongoDB Model
 
+
+We store the gender of the user so we can perform aggregate statistics
+on the most current data without having to query Facebook's APi for
+gender information on every user.
+
 user =
 {
 	"_id": auto-generated
-	"fb_id": "823924450980733",		// from fb | int
-  	"gender": "male",		// from fb | string 
-  	"timezone": -7		// let user set?
+	"fb_id": "823924450980733",		// from fb | string
+  	"gender": "male",				// from fb | string 
+  	"timezone": -7					// let user set?
  }
+
+Storage for the brands of drinks we currently support.
 
 drink =
 {
 	"_id": auto-generated,
 	"name": "cocacola",
-	"type": "soda",
-	"volume": 12		// in OZ
+	"type": "soda",					// "soda" || "energy" || "juice" || "coffee"
+	"volume": 12					// ounces, int
 }
+
+A piece of info for a data about a user's quantity consumption and contains
+an array of timestamp to indicate at what times the user registered consumption
 
 user_drink =
 {
 	"_id": auto-generated,
 	"user_id": user-auto-generated,
 	"drink_id": drink-auto-generated,
-	"timestamp": [datetime]		// we can calculate quantity
-	"quantity": 3		// added for each timestamp
+	"timestamp": [datetime]			// array of timestamps
+	"quantity": 3					// added for each timestamp
 }
-
-e = {"user_id": ObjectId("544240b84d4871c27e23093b"), "drink_id": ObjectId("544242434d4871c27e23093d"), "timestamp":}
 
 **SAMPLE CODE**
 

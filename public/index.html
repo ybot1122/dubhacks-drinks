@@ -14,19 +14,8 @@
 	</head>
 	<body>
 		<script>
-
 			// INITIALIZING THE APPFLOW
-
-		  	window.fbAsyncInit = function() {
-		    	FB.init({
-		      		appId      : '1481238075482245',
-		     		xfbml      : true,
-		      		version    : 'v2.1'
-		    	});
-		  	};
-
-		  	var active = null;
-
+			var active = null;
 		  	(function(d, s, id){
 		    	var js, fjs = d.getElementsByTagName(s)[0];
 		    	if (d.getElementById(id)) {return;}
@@ -53,15 +42,17 @@
 					}
 				});
 			}
+
+		  	window.fbAsyncInit = function() {
+		    	FB.init({
+		      		appId      : '1481238075482245',
+		     		xfbml      : true,
+		      		version    : 'v2.1'
+		    	});
+		    	authFb();
+		  	};
 		</script>
 		<h1>DubDrinks</h1>
-		<div id="centerbody">
-
-		</div>
-		<script>
-		$(document).ready(function() {
-			authFb();
-		});
-		</script>
+		<div id="centerbody"></div>
 	</body>
 </html>

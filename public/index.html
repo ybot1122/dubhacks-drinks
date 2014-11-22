@@ -9,28 +9,31 @@
 		<link rel="stylesheet" type="text/css" href="css/custom.css" />
 		<link rel="stylesheet" type="text/css" href="css/maindesign.css" />
 		<script src="js/mustache.js"></script>
+		<script src="js/appflow.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-		<script>
-					var bev = {};
-		</script>
 	</head>
 	<body>
 		<script>
-		  window.fbAsyncInit = function() {
-		    FB.init({
-		      appId      : '1481238075482245',
-		      xfbml      : true,
-		      version    : 'v2.1'
-		    });
-		  };
 
-		  (function(d, s, id){
-		     var js, fjs = d.getElementsByTagName(s)[0];
-		     if (d.getElementById(id)) {return;}
-		     js = d.createElement(s); js.id = id;
-		     js.src = "//connect.facebook.net/en_US/sdk.js";
-		     fjs.parentNode.insertBefore(js, fjs);
-		   }(document, 'script', 'facebook-jssdk'));
+			// INITIALIZING THE APPFLOW
+
+		  	window.fbAsyncInit = function() {
+		    	FB.init({
+		      		appId      : '1481238075482245',
+		     		xfbml      : true,
+		      		version    : 'v2.1'
+		    	});
+		  	};
+
+		  	var active = null;
+
+		  	(function(d, s, id){
+		    	var js, fjs = d.getElementsByTagName(s)[0];
+		    	if (d.getElementById(id)) {return;}
+		    	js = d.createElement(s); js.id = id;
+		    	js.src = "//connect.facebook.net/en_US/sdk.js";
+		    	fjs.parentNode.insertBefore(js, fjs);
+		   	}(document, 'script', 'facebook-jssdk'));
 
 			function authFb() {
 				FB.getLoginStatus(function(res) {
@@ -45,77 +48,11 @@
 
 						request.done(function(res) {
 							console.log(res);
-							loadTemplate($('#centerbody'), '#template-size', 'appflow.html', function() {
-									// client clicks back
-									$('#back').on('click', function(e) {
-										e.preventDefault();
-										e.stopPropagation();
-										loadTemplate($('#centerbody'), '#template-splash', 'appflow.html', function() {
-											$('#fb-log, #centerbody img').on('click', function(e) {
-												e.preventDefault();
-												e.stopPropagation();
-												authFb();
-											});	
-										});
-									})
-
-									// client clicks img
-									$('img').on('click', function(e) {
-										e.preventDefault();
-										e.stopPropagation();
-										bev.volume = $(this).data('size');
-										loadTemplate($('#centerbody'), '#template-brand', 'appflow.html', function() {
-												// client clicks back
-												$('#back').on('click', function(e) {
-													e.preventDefault();
-													e.stopPropagation();
-													loadTemplate($('#centerbody'), '#template-splash', 'appflow.html', function() {
-														$('#fb-log, #centerbody img').on('click', function(e) {
-															e.preventDefault();
-															e.stopPropagation();
-															authFb();
-														});	
-													});
-												});
-												// client clicks img
-												$('img').on('click', function(e) {
-													e.preventDefault();
-													e.stopPropagation();
-													bev.name = $(this).data('name');
-													var args = JSON.stringify(bev);
-													var request = $.ajax({
-														url: '/update/?name=' + bev.name + '&type=' + bev.type + '&volume=' + bev.volume,
-														type: 'GET',
-														datatype: 'JSON'
-													});
-
-													request.done(function(res) {
-														console.log(res);
-														$('#centerbody').append(
-															'<a href="dashboard.html">View Statistics!</a>'
-														);
-													});
-
-
-												});
-										})
-									})
-							});
+							active = new UserState(res.uid);
 						});
 					}
 				});
 			}
-
-			function loadTemplate($destination, selector, filename, callback) {
-				$destination.fadeOut(1000, function() {
-					$destination.load('templates/' + filename + ' ' + selector, 
-					function(response, status, xhr) {
-						$destination.html(Mustache.render($destination.text(), {}));
-						callback();
-						$destination.fadeIn(1000);
-					});
-				});
-			}		
 		</script>
 		<h1>DubDrinks</h1>
 		<div id="centerbody">
@@ -123,14 +60,7 @@
 		</div>
 		<script>
 		$(document).ready(function() {
-			loadTemplate($('#centerbody'), '#template-splash', 'appflow.html', function() {
-				$('#fb-log, #centerbody img').on('click', function(e) {
-					e.preventDefault();
-					e.stopPropagation();
-					bev.type = $(this).data('type');
-					authFb();
-				});	
-			});
+			authFb();
 		});
 		</script>
 	</body>

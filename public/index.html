@@ -49,10 +49,18 @@
 		     		xfbml      : true,
 		      		version    : 'v2.1'
 		    	});
-		    	authFb();
 		  	};
 		</script>
 		<h1>DubDrinks</h1>
-		<div id="centerbody"></div>
+		<div id="centerbody">
+			<a id="start">Please Login With Facebook to Start!</a>
+		</div>
+		<script>
+			$('#start').on('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				authFb();
+			});
+		</script>
 	</body>
 </html>

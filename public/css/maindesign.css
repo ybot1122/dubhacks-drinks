@@ -1,20 +1,14 @@
 h1 {
-	color: #7614A3;
-	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif;
+	color: #6E1E94;
+	font-family: 'Signika', sans-serif;
 	font-size: 5em;
-	letter-spacing: 2px;
-	text-shadow: 5px 5px 5px #837E85;
+	letter-spacing: 1px;
+	font-weight: bold;
 }
-h2 {
-	font-family: Tahoma, Geneva, sans-serif;
-}
-h3 {
+h2, h3, #template-size, #fb-log {
 	font-family: Tahoma, Geneva, sans-serif;
 }
 p {
-	color: #7614A3;
+	color: #6E1E94;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-}
-#template-size {
-	font-family: Tahoma, Geneva, sans-serif;
 }

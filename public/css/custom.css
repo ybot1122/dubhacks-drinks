@@ -6,7 +6,6 @@ body {
 	width: 85%;
 	margin-left: auto;
 	margin-right: auto;
-	border: solid #03A9F4 1px;
 }
 
 
@@ -40,7 +39,9 @@ img {
 	text-align: center;
 }
 
-#centerbody {
+#centerbody {	
+	font-family: Tahoma, Geneva, sans-serif;
+	font-weight: bold;
 	text-align: center;
 }
 
@@ -53,6 +54,7 @@ img {
 }
 
 #centerbody img {
+	font-family: Tahoma, Geneva, sans-serif;
 	cursor: pointer;
 }
 
@@ -62,4 +64,10 @@ img {
 
 #back {
 	cursor: pointer;
+}
+
+#viewstat {
+	position: absolute;
+	top: 0;
+	right: 0;
 }

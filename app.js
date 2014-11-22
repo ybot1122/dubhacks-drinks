@@ -166,14 +166,14 @@ function userStatRespond(name, vol, type, sess, res) {
 		if (err === null && data.length > 0) {
 			db.collection('user_drink').find({
 				user_id: req.uid,
-				drink_id: data._id;
+				drink_id: data._id
 			}, function(err, data) {
 				if (err == null && data.length > 0) {
 					res.log = data.timestamp;
 				} else {
 					renderResponse(0, 'No data found', req, res);
 				}
-			}
+			});
 		} else {
 			renderResponse(0, 'No data found', req, res);
 		}

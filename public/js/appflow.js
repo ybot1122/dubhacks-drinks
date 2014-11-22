@@ -1,8 +1,8 @@
-function loadTemplate($destination, selector, filename, callback) {
+function loadTemplate($destination, selector, filename, data, callback) {
 	$destination.fadeOut(1000, function() {
 		$destination.load('templates/' + filename + ' ' + selector, 
 		function(response, status, xhr) {
-			$destination.html(Mustache.render($destination.text(), {}));
+			$destination.html(Mustache.render($destination.text(), data));
 			callback();
 			$destination.fadeIn(1000);
 		});
@@ -60,12 +60,20 @@ var UserState = function(sessId) {
 			delete this.bev[states[this.state].dataItem];
 		}
 
-		loadTemplate($('#centerbody'), '#template-' + states[this.state].currTemplate, 'appflow.html',
-			this.clickBehavior);
+		if (this.state == 2) {
+			var result = {};
+			result[this.bev.type] = true;
+			console.log(result);
+			loadTemplate($('#centerbody'), '#template-' + states[this.state].currTemplate, 'appflow.html', 
+				result, this.clickBehavior);
+		} else {
+			loadTemplate($('#centerbody'), '#template-' + states[this.state].currTemplate, 'appflow.html', 
+				{}, this.clickBehavior);
+		}
 		console.log(this.bev);
 	}
 
 	// render the starting splash screen
-	loadTemplate($('#centerbody'), '#template-splash', 'appflow.html', this.clickBehavior);
+	loadTemplate($('#centerbody'), '#template-splash', 'appflow.html', {}, this.clickBehavior);
 }
 

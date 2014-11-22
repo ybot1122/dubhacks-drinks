@@ -26,10 +26,16 @@
 
 <script id="template-brand" type="text/html">
 	<h2>Choose the brand of your drink</h2>
+	{{#soda}}
 	<img data-info="cocacola" src="images/coke.jpg" alt="coke">
 	<img data-info="sprite" src="images/sprite.jpg" alt="sprite">
+	{{/soda}}
+	{{#juice}}
 	<img data-info="welchs" src="images/welchs.jpg" alt="welchs">
+	{{/juice}}
+	{{#energy}}
 	<img data-info="redbull" src="images/redbull.jpg" alt="redbull">
+	{{/energy}}
 	<div>
 		<button type="button"><span id="back">Back</span></button>
 	</div>

@@ -176,7 +176,7 @@ function retriever(curr, max, data, result, callback) {
 	});
 }
 
-app.get('/retrieve/', function(req, res) {
+app.get('/user/', function(req, res) {
 	if (isInSession(req)) {
 		db.collection('user_drink').find({user_id: req.session.uid}, function(err, data) {
 			if (err === null && data.length > 0) {

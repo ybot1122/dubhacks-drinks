@@ -31,6 +31,21 @@ is invalid. Otherwise, it expects the following data:
 		volume: 	"drink volume"
 	}
 
+-- Requesting/Receiving Statistics --
+Making a GET request to /user/ will return an error if session is invalid, otherwise it expects the following data:
+	{
+		name: 		"drink name",
+		type: 		"drink type",
+		volume: 	"drink volume",
+	}
+
+The standard response for a statistics request is:
+	{
+		calories: 	int representing calories per unit,
+		caffeine: 	int representing caffeine per unit,
+		log: 		array of IsoTime objects for each unit
+	}
+
 -- Server Responses --
 Every single GET request will receive one of the following responses:
 On success:

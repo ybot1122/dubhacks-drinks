@@ -1,6 +1,20 @@
 h1 {
-	color: #7725C4;
+	color: #7614A3;
 	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif;
 	font-size: 5em;
 	letter-spacing: 2px;
+	text-shadow: 5px 5px 5px #837E85;
+}
+h2 {
+	font-family: Tahoma, Geneva, sans-serif;
+}
+h3 {
+	font-family: Tahoma, Geneva, sans-serif;
+}
+p {
+	color: #7614A3;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+#template-size {
+	font-family: Tahoma, Geneva, sans-serif;
 }

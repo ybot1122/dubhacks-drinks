@@ -169,7 +169,7 @@ function userStatRespond(name, vol, type, sess, res) {
 				drink_id: data._id;
 			}, function(err, data) {
 				if (err == null && data.length > 0) {
-					res.log = timestamp;
+					res.log = data.timestamp;
 				} else {
 					renderResponse(0, 'No data found', req, res);
 				}
@@ -186,6 +186,9 @@ app.get('/user/', function(req, res) {
 	&& req.query.hasOwnProperty('name')) {
 		var res = {};
 		userStatRespond(req.query.name, req.query.volume, req.query.type, req.session, res);
+		// mashery api
+		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.end(JSON.stringify(res));
 	} else {
 		renderResponse(0, 'User not authenticated', req, res);
 	}

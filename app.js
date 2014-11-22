@@ -156,40 +156,36 @@ app.get('/update/', function(req, res) {
 	}
 });
 
-function retriever(curr, max, data, result, callback) {
-	if (curr === max) {
-		callback(result);
-		return;
-	}
-	db.collection('drink').find({_id: data[curr].drink_id}, function(err, info) {
-		if (err === null && info.length > 0) {
-			result.push(
-				{
-					name: info[0].name,
-					type: info[0].type,
-					volume: info[0].volume,
-					quantity: data[curr].quantity,
-					times: data[curr].timestamp
-			});
+function userStatRespond(name, vol, type, sess, res) {
+	// find the id of the specified drink
+	db.collection('drink').find({
+		name: name,
+		type: type,
+		volume: vol
+	}, function(err, data) {
+		if (err === null && data.length > 0) {
+			db.collection('user_drink').find({
+				user_id: req.uid,
+				drink_id: data._id;
+			}, function(err, data) {
+				if (err == null && data.length > 0) {
+					res.log = timestamp;
+				} else {
+					renderResponse(0, 'No data found', req, res);
+				}
+			}
+		} else {
+			renderResponse(0, 'No data found', req, res);
 		}
-		retriever(curr + 1, max, data, result, callback);
 	});
 }
 
 app.get('/user/', function(req, res) {
-	if (isInSession(req)) {
-		db.collection('user_drink').find({user_id: req.session.uid}, function(err, data) {
-			if (err === null && data.length > 0) {
-				// found
-				var result = [];
-				retriever(0, data.length, data, result, function(toSend) {
-					res.writeHead(200, {'Content-Type': 'application/json'});
-					res.end(JSON.stringify(toSend));
-				});
-			} else {
-				renderResponse(0, 'No data found', req, res);
-			}
-		});
+	if (isInSession(req) && req.query.hasOwnProperty('type')
+	&& req.query.hasOwnProperty('volume')
+	&& req.query.hasOwnProperty('name')) {
+		var res = {};
+		userStatRespond(req.query.name, req.query.volume, req.query.type, req.session, res);
 	} else {
 		renderResponse(0, 'User not authenticated', req, res);
 	}

@@ -2,6 +2,8 @@ Statistics notes
 
 CHART 1: COUNT BY TYPE
 
+>> Depends on our own db
+
 1st level: Sum of Consumption by type
 - show volume sum of each type
 	in fl oz
@@ -12,6 +14,8 @@ CHART 1: COUNT BY TYPE
 	> our data: drink [type, volume] & user_drink [timestamp, quantity]
 
 CHART 2: NUTRITION
+
+>> Depends on mashery db
 
 1st level: Sum of Consumption by Nutrients
 - show volume sum

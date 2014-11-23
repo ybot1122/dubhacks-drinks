@@ -13,15 +13,13 @@
 
 <body>
 
-
 <h1>
 	DubDrink
 </h1>
 <div class="lv1-block" id="container" style="min-width: auto; height: 500px; margin: 0 auto"></div>
 
-
 <!-- data  -->
-<pre id="tsv" style="display:none">Browser Version	Total Market Share
+<pre id="tsv" style="display:none">Drink Type	Volume Market Share
 Soda 8.0	26.61%
 Soda 9.0	16.96%
 Juice 18.0	8.01%
@@ -76,14 +74,9 @@ var request = $.ajax({
     
 </script>
 
-
-
 <script type="text/javascript">
 
-
-
 $(function () {
-
     Highcharts.data({
         csv: document.getElementById('tsv').innerHTML,
         itemDelimiter: '\t',
@@ -105,9 +98,7 @@ $(function () {
             $.each(columns[0], function (i, name) {
                 var brand,
                     version;
-
                 if (i > 0) {
-
                     // Remove special edition notes
                     name = name.split(' -')[0];
 
@@ -133,7 +124,6 @@ $(function () {
                         versions[brand].push(['v' + version, columns[1][i]]);
                     }
                 }
-
             });
 
             $.each(brands, function (name, y) {
@@ -218,14 +208,12 @@ $(function () {
                             fill: '#bada55'
                         }
                     }
-                }
-                
+                }           
             });
         }
     });
 });
 </script>
-
 
 <style type="text/css">
 #statTable {
@@ -236,17 +224,6 @@ $(function () {
     text-align: center;
 }
 </style>
-
-
-
-
-
-
-
-
-
-
-
 
 </body>
 </html>

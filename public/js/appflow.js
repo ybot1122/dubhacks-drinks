@@ -43,34 +43,32 @@ var UserState = function(sessId) {
 				dataItem: 'type'
 			},
 			{	
-				currTemplate: 'size',
-				dataItem: 'size'
-			},
-			{	
 				currTemplate: 'brand',
 				dataItem: 'name'
+			},
+			{	
+				currTemplate: 'size',
+				dataItem: 'size'
 			}
 		];
 
 		if (action == 1) {
 			this.bev[states[this.state].dataItem] = data;
-			this.state = (this.state == 2) ? 2 : this.state + 1;
+			this.state = (this.state == states.length - 1) ? this.state : this.state + 1;
 		} else {
 			this.state = (this.state == 0) ? 0 : this.state - 1;
 			delete this.bev[states[this.state].dataItem];
 		}
 
-		if (this.state == 2) {
+		if (this.state == 1) {
 			var result = {};
 			result[this.bev.type] = true;
-			console.log(result);
 			loadTemplate($('#centerbody'), '#template-' + states[this.state].currTemplate, 'appflow.html', 
 				result, this.clickBehavior);
 		} else {
 			loadTemplate($('#centerbody'), '#template-' + states[this.state].currTemplate, 'appflow.html', 
 				{}, this.clickBehavior);
 		}
-		console.log(this.bev);
 	}
 
 	// render the starting splash screen

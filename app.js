@@ -16,6 +16,7 @@ var FB = new facebook.Facebook({
 	version		: 	'v2.1'
 });
 var db = mongo('drinker:ilikesodaenergy@146.148.61.59/drinkdb');
+var http = require('http');
 
 /*
 	invoke this function to update a drink tally
@@ -156,7 +157,7 @@ app.get('/update/', function(req, res) {
 	}
 });
 
-function userStatRespond(name, vol, type, sess, res) {
+function userStatRespond(name, vol, type, sess, returnRes, res, req) {
 	// find the id of the specified drink
 	db.collection('drink').find({
 		name: name,
@@ -169,7 +170,7 @@ function userStatRespond(name, vol, type, sess, res) {
 				drink_id: data._id
 			}, function(err, data) {
 				if (err == null && data.length > 0) {
-					res.log = data.timestamp;
+					returnRes.log = data.timestamp;
 				} else {
 					renderResponse(0, 'No data found', req, res);
 				}
@@ -180,15 +181,49 @@ function userStatRespond(name, vol, type, sess, res) {
 	});
 }
 
+function masheryWrapper(outParam, callback) {
+	var api_key = 'czy8yd2qgary8424wczyjzav';
+	var uid = 'ert';
+	var devid = 'ert';
+	var appid = 'ert';
+	var options = {
+	  host: 'api.foodessentials.com',
+	  path: '/createsession?uid=' + uid + '&devid=' + devid + '&appid=' + appid + '&f=json&api_key=' + api_key,
+	  method: 'GET'
+	};
+	var reqGet = http.request(options, function(res) {
+    	res.on('data', function(d) {
+    		outParam.data = JSON.parse(d);
+    		callback();
+    	});
+	});
+	reqGet.end();
+}
+
+function masheryWork(res, callback) {
+	var sid = {};
+	masheryWrapper(sid, function() {
+		/*
+		var response = {};
+		masheryWrapper(response, "url", function() {
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.end(JSON.stringify(response));
+		});
+		*/
+		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.end(JSON.stringify(sid));
+	});
+}
+
 app.get('/user/', function(req, res) {
 	if (isInSession(req) && req.query.hasOwnProperty('type')
 	&& req.query.hasOwnProperty('volume')
 	&& req.query.hasOwnProperty('name')) {
-		var res = {};
-		userStatRespond(req.query.name, req.query.volume, req.query.type, req.session, res);
-		// mashery api
-		res.writeHead(200, {'Content-Type': 'application/json'});
-		res.end(JSON.stringify(res));
+		//userStatRespond(req.query.name, req.query.volume, req.query.type, req.session, response, res, req);
+		masheryWork(res, function(response) {
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.end(JSON.stringify(response));
+		});
 	} else {
 		renderResponse(0, 'User not authenticated', req, res);
 	}

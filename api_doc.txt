@@ -42,7 +42,7 @@ Making a GET request to /user/ will return an error if session is invalid, other
 The standard response for a statistics request is:
 	{
 		calories: 	int representing calories per unit,
-		caffeine: 	int representing caffeine per unit,
+		sugar: 	int representing caffeine per unit,
 		log: 		array of IsoTime objects for each unit
 	}
 

@@ -1,0 +1,28 @@
+Statistics notes
+
+CHART 1: COUNT BY TYPE
+
+1st level: Sum of Consumption by type
+- show volume sum of each type
+	in fl oz
+
+2nd level: Consumption of type over time
+- show volume based on time
+	> have to iterate over timestamp array
+	> our data: drink [type, volume] & user_drink [timestamp, quantity]
+
+CHART 2: NUTRITION
+
+1st level: Sum of Consumption by Nutrients
+- show volume sum
+	in g
+	of sugars, sodium, caffeine
+
+2nd level: Consumption of nutrient over time
+
+
+JSON Object received:
+
+** to do **
+need to define the mapping from
+request URL > expected params > expected response

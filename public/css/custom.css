@@ -68,6 +68,24 @@ img {
 
 #viewstat {
 	position: absolute;
-	top: 0;
-	right: 0;
+	top: 30px;
+	right: 30px;
+}
+
+/*TILT*/
+#bigButton1, #bigButton2, #bigButton3, #bigButton4, #bigButton5, #bigButton6 {
+	display: inline;
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+}
+ 
+#bigButton1:hover, #bigButton2:hover, #bigButton3:hover, #bigButton4:hover, #bigButton5:hover, #bigButton6:hover {
+  -webkit-transform: rotate(-10deg);
+     -moz-transform: rotate(-10deg);
+       -o-transform: rotate(-10deg);
+      -ms-transform: rotate(-10deg);
+          transform: rotate(-10deg);
 }
